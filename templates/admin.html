@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Page</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Admin Panel</h1>
+        <h2>Add Question</h2>
+        <input type="text" id="question" placeholder="Enter question" required>
+        <input type="text" id="options" placeholder="Enter options (comma-separated)" required>
+        <select id="question-type">
+            <option value="multiple-choice">Multiple Choice</option>
+            <option value="multiple-select">Multiple Select</option>
+        </select>
+        <button id="add-question">Add Question</button>
+
+        <h2>Existing Questions</h2>
+        <ul id="question-list"></ul>
+
+        <h2>Survey Responses</h2>
+        <button id="view-responses" onclick="window.location.href='/responses'">View Responses</button>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

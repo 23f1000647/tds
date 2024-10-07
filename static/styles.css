@@ -1,0 +1,42 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    padding: 20px;
+    background-color: #f4f4f4;
+}
+
+.container {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1, h2 {
+    text-align: center;
+}
+
+input[type="text"], input[type="email"], select {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+}
+
+button {
+    padding: 10px 15px;
+    margin-top: 10px;
+}
+
+.container {
+    max-width: 800px; /* Limit the width of the container */
+    margin: 0 auto; /* Center the container */
+}
+
+h3 {
+    margin: 20px 0 10px; /* Add some spacing above and below the question title */
+}
+
+canvas {
+    max-width: 100%; /* Make canvas responsive */
+    height: auto; /* Keep the aspect ratio */
+}

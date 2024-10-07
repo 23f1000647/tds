@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Survey Page</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Survey Questions</h1>
+        <div id="questions"></div>
+        <input type="hidden" id="user-email" value=""> <!-- Hidden input to store email -->
+        <button id="submit-response">Submit Response</button>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script>
+        // Assuming the user's email is set in the localStorage or via some global variable
+        const userEmail = localStorage.getItem('userEmail');
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSurveyQuestions();
+            document.getElementById('user-email').value = userEmail; // Set email in hidden input
+
+            document.getElementById('submit-response').onclick = function() {
+                const responses = {};
+
+                document.querySelectorAll('.question').forEach(q => {
+                    const questionText = q.querySelector('.question-text').innerText;
+                    const selectedOptions = Array.from(q.querySelectorAll('input:checked')).map(input => input.value);
+                    responses[questionText] = selectedOptions;
+                });
+
+                fetch('/api/responses', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email: userEmail, responses: responses }) // Use stored email
+                }).then(response => {
+                    if (response.ok) {
+                        alert('Response submitted!');
+                    }
+                });
+            };
+        });
+
+        function loadSurveyQuestions() {
+            fetch('/api/questions')
+                .then(response => response.json())
+                .then(data => {
+                    const questionsDiv = document.getElementById('questions');
+                    questionsDiv.innerHTML = '';
+                    data.forEach(q => {
+                        const questionContainer = document.createElement('div');
+                        questionContainer.classList.add('question');
+                        
+                        const questionText = document.createElement('div');
+                        questionText.classList.add('question-text');
+                        questionText.innerText = q.text;
+
+                        questionContainer.appendChild(questionText);
+                        
+                        if (q.type === 'multiple-choice') {
+                            q.options.forEach(option => {
+                                const optionLabel = document.createElement('label');
+                                const optionInput = document.createElement('input');
+                                optionInput.type = 'radio';
+                                optionInput.name = q.text;
+                                optionInput.value = option;
+                                optionLabel.appendChild(optionInput);
+                                optionLabel.appendChild(document.createTextNode(option));
+                                questionContainer.appendChild(optionLabel);
+                            });
+                        } else if (q.type === 'multiple-select') {
+                            q.options.forEach(option => {
+                                const optionLabel = document.createElement('label');
+                                const optionInput = document.createElement('input');
+                                optionInput.type = 'checkbox';
+                                optionInput.value = option;
+                                optionLabel.appendChild(optionInput);
+                                optionLabel.appendChild(document.createTextNode(option));
+                                questionContainer.appendChild(optionLabel);
+                            });
+                        }
+
+                        questionsDiv.appendChild(questionContainer);
+                    });
+                });
+        }
+    </script>
+</body>
+</html>
